@@ -1,0 +1,5 @@
+# Namespace qui regroupe toutes les ressources de l'application
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bijouterie

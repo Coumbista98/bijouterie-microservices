@@ -19,10 +19,10 @@ services:
     image: bijouterie-mysql:local
     container_name: bijouterie-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:coumba}
       MYSQL_DATABASE: ${DB_NAME:-bijouterie}
-      MYSQL_USER: ${DB_USER:-bijoux}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-bijouxpass}
+      MYSQL_USER: ${DB_USER:coumba}
+      MYSQL_PASSWORD: ${DB_PASSWORD:coumba}
     volumes:
       - mysql-data:/var/lib/mysql
     healthcheck:
@@ -49,9 +49,9 @@ services:
       DB_HOST: mysql            # = nom du service MySQL
       DB_PORT: 3306
       DB_NAME: ${DB_NAME:-bijouterie}
-      DB_USER: ${DB_USER:-bijoux}
-      DB_PASSWORD: ${DB_PASSWORD:-bijouxpass}
-      SHOP_NAME: ${SHOP_NAME:-Maison Aurore}
+      DB_USER: ${DB_USER:coumba}
+      DB_PASSWORD: ${DB_PASSWORD:coumba}
+      SHOP_NAME: ${SHOP_NAME:Bijouterie de coumba}
       CURRENCY: ${CURRENCY:-EUR}
       MAX_FILE_SIZE_MB: ${MAX_FILE_SIZE_MB:-5}
     # Pas de port publié : le backend n'est joignable QUE via le frontend

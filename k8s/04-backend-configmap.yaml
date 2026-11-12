@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+  namespace: bijouterie
+  labels:
+    app: bijouterie
+    tier: backend
+type: Opaque
+stringData:
+  PORT: "3000"
+  DB_HOST: "mysql"            # = nom du service MySQL
+  DB_PORT: "3306"
+  DB_NAME: "${DB_NAME:-bijouterie}"
+  DB_USER: "${DB_USER:coumba}"
+  DB_PASSWORD: "${DB_PASSWORD:coumba}"
+  SHOP_NAME: "${SHOP_NAME: Bijouterie de coumba}"
+  CURRENCY: "${CURRENCY:-EUR}"
+  MAX_FILE_SIZE_MB: "${MAX_FILE_SIZE_MB:-5}"

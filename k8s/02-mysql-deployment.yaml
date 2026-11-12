@@ -1,0 +1,37 @@
+# Deployment MySQL : 1 seul replica (pas de réplication, pas de volume persistant)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: bijouterie
+  labels:
+    app: bijouterie
+    tier: database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:            
+      app: bijouterie
+      tier: database
+  template:
+    metadata:
+      labels:
+        app: bijouterie
+        tier: database
+    spec:
+      containers:
+        - name: mysql
+          image: diagnecoumba/bijouterie-mysql:1   # tag explicite = n° de build Jenkins (jamais latest)
+          ports:
+            - containerPort: 3306
+          # envFrom : injecte TOUTES les clés du Secret comme variables d'environnement
+          envFrom:
+            - secretRef:
+                name: mysql-secret
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 500m
+              memory: 1Gi
