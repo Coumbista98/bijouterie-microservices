@@ -6,14 +6,13 @@ metadata:
   labels:
     app: bijouterie
     tier: backend
-type: Opaque
-stringData:
+data:
   PORT: "3000"
   DB_HOST: "mysql"            # = nom du service MySQL
   DB_PORT: "3306"
-  DB_NAME: "${DB_NAME:-bijouterie}"
-  DB_USER: "${DB_USER:coumba}"
-  DB_PASSWORD: "${DB_PASSWORD:coumba}"
-  SHOP_NAME: "${SHOP_NAME: Bijouterie de coumba}"
-  CURRENCY: "${CURRENCY:-EUR}"
-  MAX_FILE_SIZE_MB: "${MAX_FILE_SIZE_MB:-5}"
+  DB_NAME: "bijouterie"
+  DB_USER: "coumba"
+  DB_PASSWORD: "coumba"
+  SHOP_NAME: "Bijouterie de coumba"
+  CURRENCY: "EUR"
+  MAX_FILE_SIZE_MB: "5"

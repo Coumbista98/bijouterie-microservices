@@ -6,7 +6,6 @@ metadata:
   labels:
     app: bijouterie
     tier: backend
-type: Opaque
-stringData:
-  BACKEND_URL: "${BACKEND_URL:-http://backend:3000}"
-  MAX_UPLOAD_SIZE: "${MAX_UPLOAD_SIZE_MB:-5}"
+data:
+  BACKEND_URL: "http://backend:3000"
+  MAX_UPLOAD_SIZE: "10m"

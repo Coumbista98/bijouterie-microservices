@@ -1,0 +1,63 @@
+# Deployment backend : 2 replicas (l'API ne stocke aucun fichier, donc réplicable)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: bijouterie
+  labels:
+    app: bijouterie
+    tier: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: bijouterie
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: bijouterie
+        tier: backend
+    spec:
+      containers:
+        - name: backend
+          image: diagnecoumba/bijouterie-backend:1   # tag explicite, pas latest
+          ports:
+            - containerPort: 3000
+          # envFrom : toutes les clés de la ConfigMap (PORT, DB_HOST, ...)
+          envFrom:
+            - configMapRef:
+                name: backend-config
+          # valueFrom : une seule clé à la fois, ici pour chaque identifiant du Secret
+          env:
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: DB_PASSWORD
+          # livenessProbe : si elle échoue, Kubernetes redémarre le conteneur
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          # readinessProbe : tant qu'elle échoue (MySQL injoignable), le pod ne reçoit pas de trafic
+          readinessProbe:
+            httpGet:
+              path: /api/ready
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 256Mi

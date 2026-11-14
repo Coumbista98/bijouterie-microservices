@@ -1,0 +1,18 @@
+# Service backend : ClusterIP, répartit les requêtes entre les 2 pods.
+# Son nom "backend" est utilisé dans BACKEND_URL (http://backend:3000).
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: bijouterie
+  labels:
+    app: bijouterie
+    tier: backend
+spec:
+  type: ClusterIP
+  selector:
+    app: bijouterie
+    tier: backend
+  ports:
+    - port: 3000
+      targetPort: 3000
