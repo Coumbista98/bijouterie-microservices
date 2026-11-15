@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: diagnecoumba/bijouterie-backend:1   # tag explicite, pas latest
+          image: diagnecoumba/bijouterie-backend:2   # tag explicite, pas latest
           ports:
             - containerPort: 3000
           # envFrom : toutes les clés de la ConfigMap (PORT, DB_HOST, ...)
