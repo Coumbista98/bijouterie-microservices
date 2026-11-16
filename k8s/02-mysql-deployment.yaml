@@ -1,4 +1,5 @@
-# Deployment MySQL : 1 seul replica (pas de réplication, pas de volume persistant)
+# Deployment MySQL (version bonus) : image officielle mysql:8.4,
+# données sur un PVC, init.sql fourni par une ConfigMap.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,8 +10,12 @@ metadata:
     tier: database
 spec:
   replicas: 1
+  # Recreate : l'ancien pod s'arrête AVANT la création du nouveau
+  # (un volume ReadWriteOnce ne peut pas être utilisé par deux pods à la fois)
+  strategy:
+    type: Recreate
   selector:
-    matchLabels:            
+    matchLabels:
       app: bijouterie
       tier: database
   template:
@@ -21,13 +26,21 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: diagnecoumba/bijouterie-mysql:1   # tag explicite = n° de build Jenkins (jamais latest)
+          image: mysql:8.4   # image officielle, tag explicite
           ports:
             - containerPort: 3306
-          # envFrom : injecte TOUTES les clés du Secret comme variables d'environnement
+          # envFrom : toutes les clés du Secret
           envFrom:
             - secretRef:
                 name: mysql-secret
+          volumeMounts:
+            # données MySQL : conservées dans le PVC
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+            # scripts d'initialisation : exécutés seulement si /var/lib/mysql est vide
+            - name: mysql-init
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
           resources:
             requests:
               cpu: 250m
@@ -35,3 +48,10 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: mysql-init
+          configMap:
+            name: mysql-initdb

@@ -1,0 +1,18 @@
+# PersistentVolumeClaim MySQL : demande de stockage persistant pour la base.
+# Les données survivent à la suppression du pod (bonus du TP).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: bijouterie
+  labels:
+    app: bijouterie
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce        # monté en lecture/écriture par un seul nœud à la fois
+  resources:
+    requests:
+      storage: 1Gi         # taille demandée
+  # storageClassName omis : le cluster utilise sa StorageClass par défaut
+  # (hostpath sous Docker Desktop, standard sous minikube)
